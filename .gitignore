@@ -1,0 +1,17 @@
+# Directories
+.idea
+__pycache__
+__pycache__/*
+
+
+# Files
+*.py
+*.key
+
+
+# Executables
+tailwind
+
+
+# OS specific
+*.DS_Store
