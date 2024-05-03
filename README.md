@@ -30,5 +30,12 @@ Para el desarrollo se requiere de lo siguiente:
 
 ### Historial de cambios
 
+#### v0.0.2
+- Agregado botón para el menu en `mobile`.
+- Agregada validación extra para la máscara de red cuando
+  es una IP.
+- Agregada valiadación del campo opcional.
+- La aplicación puede mostrar las propiedades de una dirección de host.
+
 #### v0.0.1
 - Proyecto inicial

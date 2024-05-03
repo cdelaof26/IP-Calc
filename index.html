@@ -4,8 +4,7 @@
 		<meta charset="UTF-8">
 
 		<link rel="stylesheet" type="text/css" href="CSS/tout.css">
-		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-		-->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 		<title>
 			IP-Calc
@@ -13,15 +12,35 @@
 	</head>
 	<body class="flex bg-body-0 dark:bg-body-1 text-primary-0 dark:text-primary-1">
 		<script id="navbar" src="./components/navbar.js"></script>
-		<main id="main_container" class="w-[100%] h-max xl:w-[60%] md:ml-[26%] xl:mr-[15%] p-10">
+		<div class="fixed right-0 m-1 md:hidden">
+			<button class="p-2 rounded-lg bg-sidebar-0 dark:bg-sidebar-1" onclick={toggle_navbar_visibility()}>
+				<i class="fa fa-align-left fa-lg"></i>
+			</button>
+		</div>
+		<main id="main_container" class="w-[100%] h-max xl:w-[60%] md:ml-[26%] xl:mr-[15%] p-6 md:p-10">
 			<p class="text-4xl font-bold">
 				IP-Calc
 			</p>
-			<div>
-				Sub-netting
+			<div class="mt-2">
+				<div class="flex justify-between font-mono tracking-tight text-lg md:text-2xl">
+					<p>
+						Dirección:
+					</p>
+					<p id="user_ip"></p>
+				</div>
+				<div class="flex justify-between font-mono tracking-tight md:text-lg">
+					<p>
+						Máscara:
+					</p>
+					<p id="user_mask"></p>
+				</div>
+			</div>
+			<div id="sub_netting_data">
+
 			</div>
 		</main>
 
+		<script src="src/data_processing.js" type="application/javascript"></script>
 		<script src="index.js" type="application/javascript"></script>
 	</body>
 </html>
