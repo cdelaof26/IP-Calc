@@ -9,10 +9,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Debug
-    /*document.getElementById("ip_address").value = "172.100.85.64";
-    document.getElementById("mask").value = "255.255.224.0";
-    perform_operation();*/
+    document.getElementById("ip_address").value = "10.0.0.1";
+    document.getElementById("mask").value = "1";
+    document.getElementById("optional_data").value = "3";
+    selected_optional_datatype = 0;
+    perform_operation();
 });
+
+
+class OptionalDataType {
+    static #_SUB_NETTING_BITS = 0;
+    static #_SUB_NETWORKS_AMOUNT = 1;
+    static #_HOST_PER_SUB_NET = 2;
+
+    static get SUB_NETTING_BITS() { return this.#_SUB_NETTING_BITS; }
+    static get SUB_NETWORKS_AMOUNT() { return this.#_SUB_NETWORKS_AMOUNT; }
+    static get HOST_PER_SUB_NET() { return this.#_HOST_PER_SUB_NET; }
+}
+
 
 let selected_optional_datatype;
 
@@ -38,24 +52,41 @@ function set_field_type(id_type) {
 
     selected_optional_datatype = id_type;
 
+    let properties = [
+        "border", "transition-[border]", "bg-sky-500",
+        "text-[#FFF]", "dark:bg-sky-500", "transition-[background]",
+        "hover:bg-sky-600", "hover:dark:bg-sky-600"
+    ];
+
     for (let i = 0; i < 3; i++) {
         let button = document.getElementById("b" + i);
-        button.classList.remove("border-sky-500");
-        button.classList.remove("dark:border-sky-500");
+
+        for (let j = 0; j < properties.length; j++)
+            if (j < 2)
+                button.classList.add(properties[j]);
+            else
+                button.classList.remove(properties[j]);
     }
 
-    document.getElementById("b" + id_type).classList.add("border-sky-500");
-    document.getElementById("b" + id_type).classList.add("dark:border-sky-500");
+    let b = document.getElementById("b" + id_type);
+
+    for (let j = 0; j < properties.length; j++)
+        if (j < 2)
+            b.classList.remove(properties[j]);
+        else
+            b.classList.add(properties[j]);
 
     let label = document.getElementById("optional_field");
-    if (id_type === 0)
+    if (id_type === OptionalDataType.SUB_NETTING_BITS)
         label.textContent = "Bits para subredes [Opcional]";
-    else if (id_type === 1)
+    else if (id_type === OptionalDataType.SUB_NETWORKS_AMOUNT)
         label.textContent = "Cantidad de subredes [Opcional]";
-    else if (id_type === 2)
+    else if (id_type === OptionalDataType.HOST_PER_SUB_NET)
         label.textContent = "Cantidad de hosts por subred [Opcional]";
-    else
+    else {
         set_error("Internal error");
+        throw TypeError("El id '" + id_type + "' no es válido");
+    }
 }
 
 
@@ -89,22 +120,20 @@ function scroll_to_top() {
 }
 
 
-function get_width() {
-    // Function extracted from: https://stackoverflow.com/questions/1038727/how-to-get-browser-width-using-javascript-code
-    return Math.max(
-        document.body.scrollWidth,
-        document.documentElement.scrollWidth,
-        document.body.offsetWidth,
-        document.documentElement.offsetWidth,
-        document.documentElement.clientWidth
-    );
-}
-
-
 function toggle_navbar_visibility() {
     let navbar = document.getElementById("navbar");
-    if (!navbar.classList.contains("-translate-x-full"))
+    let navbar_toggle_button = document.getElementById("navbar_toggle_button");
+    let error_label = document.getElementById("error_label");
+
+    if (!navbar.classList.contains("-translate-x-full")) {
         navbar.classList.add("-translate-x-full");
-    else
+        navbar_toggle_button.classList.remove("bg-sky-500");
+        navbar_toggle_button.classList.remove("text-[#FFF]");
+        error_label.classList.add("invisible");
+    } else {
         navbar.classList.remove("-translate-x-full");
+        navbar_toggle_button.classList.add("bg-sky-500");
+        navbar_toggle_button.classList.add("text-[#FFF]");
+        error_label.classList.remove("invisible");
+    }
 }
