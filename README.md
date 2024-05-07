@@ -27,6 +27,10 @@ Para el desarrollo se requiere de lo siguiente:
 
 ### Historial de cambios
 
+### v0.0.4
+- Agregado campo opcional `Bits para hosts`
+- Agregada funcionalidad de sub netting
+
 ### v0.0.3
 - Correcciones al diseño `mobile`
 - Agregado botón para ver los datos de la dirección dada 

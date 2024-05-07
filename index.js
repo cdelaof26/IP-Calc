@@ -9,21 +9,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Debug
-    document.getElementById("ip_address").value = "10.0.0.1";
-    document.getElementById("mask").value = "1";
-    document.getElementById("optional_data").value = "3";
+    /*document.getElementById("ip_address").value = "10.0.0.1";
+    document.getElementById("mask").value = "12";
+    document.getElementById("optional_data").value = "1";
     selected_optional_datatype = 0;
-    perform_operation();
+    perform_operation();*/
 });
 
 
 class OptionalDataType {
     static #_SUB_NETTING_BITS = 0;
     static #_SUB_NETWORKS_AMOUNT = 1;
-    static #_HOST_PER_SUB_NET = 2;
+    static #_HOST_BITS = 2;
+    static #_HOST_PER_SUB_NET = 3;
 
     static get SUB_NETTING_BITS() { return this.#_SUB_NETTING_BITS; }
     static get SUB_NETWORKS_AMOUNT() { return this.#_SUB_NETWORKS_AMOUNT; }
+    static get HOST_BITS() { return this.#_HOST_BITS; }
     static get HOST_PER_SUB_NET() { return this.#_HOST_PER_SUB_NET; }
 }
 
@@ -31,7 +33,7 @@ class OptionalDataType {
 let selected_optional_datatype;
 
 
-function set_error(error_data) {
+function set_data_error_msg(error_data) {
     let error_label = document.getElementById("error_label");
 
     if (error_data !== "") {
@@ -46,7 +48,7 @@ function set_error(error_data) {
 
 function set_field_type(id_type) {
     if (typeof id_type !== "number") {
-        set_error("Internal error");
+        set_data_error_msg("Internal error");
         throw TypeError("El id '" + id_type + "' no es válido");
     }
 
@@ -58,7 +60,7 @@ function set_field_type(id_type) {
         "hover:bg-sky-600", "hover:dark:bg-sky-600"
     ];
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
         let button = document.getElementById("b" + i);
 
         for (let j = 0; j < properties.length; j++)
@@ -81,12 +83,25 @@ function set_field_type(id_type) {
         label.textContent = "Bits para subredes [Opcional]";
     else if (id_type === OptionalDataType.SUB_NETWORKS_AMOUNT)
         label.textContent = "Cantidad de subredes [Opcional]";
+    else if (id_type === OptionalDataType.HOST_BITS)
+        label.textContent = "Bits para hosts [Opcional]";
     else if (id_type === OptionalDataType.HOST_PER_SUB_NET)
         label.textContent = "Cantidad de hosts por subred [Opcional]";
     else {
-        set_error("Internal error");
+        set_data_error_msg("Internal error");
         throw TypeError("El id '" + id_type + "' no es válido");
     }
+}
+
+
+function create_error_div(error_msg) {
+    let div = document.createElement("div");
+    div.className = "p-2 bg-red-100 dark:bg-red-950 rounded-lg";
+    let p = document.createElement("p");
+    p.className = "border-l-4 border-red-500 pl-4";
+    p.textContent = error_msg;
+    div.appendChild(p);
+    return div;
 }
 
 
@@ -97,7 +112,7 @@ function create_div_content(label, value, value_classes) {
     let html_value = document.createElement("p");
 
     html_label.textContent = label;
-    html_label.className = "mr-2"
+    html_label.className = "mr-2 self-center"
     html_value.className = value_classes;
     html_value.textContent = value;
     div.appendChild(html_label);

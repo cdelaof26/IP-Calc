@@ -17,7 +17,7 @@
 				<input id="mask" class="px-2 w-full transition-[border] duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 focus:outline-none focus:ring focus:border-blue-500 rounded-lg bg-body-0 dark:bg-body-1" type="text" placeholder="Entero o IPv4">
 			</div>
 
-			<div class="my-8">
+			<div class="my-6">
 				<p class="ml-4 text-xs uppercase text-dim-2 dark:text-dim-3">
 					Selecciona el campo opcional
 				</p>
@@ -28,13 +28,16 @@
 					<button id="b1" class="p-2 mt-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 focus:outline-none focus:ring focus:border-blue-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.SUB_NETWORKS_AMOUNT)}>
 						Cantidad de subredes
 					</button>
-					<button id="b2" class="p-2 mt-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 focus:outline-none focus:ring focus:border-blue-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.HOST_PER_SUB_NET)}>
+					<button id="b2" class="p-2 mt-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 focus:outline-none focus:ring focus:border-blue-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.HOST_BITS)}>
+						Bits para hosts
+					</button>
+					<button id="b3" class="p-2 mt-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 focus:outline-none focus:ring focus:border-blue-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.HOST_PER_SUB_NET)}>
 						Cantidad de hosts por subred
 					</button>
 				</div>
 			</div>
 
-			<div class="mb-10">
+			<div class="mb-8">
 				<label id="optional_field" for="optional_data" class="text-xs uppercase text-dim-2 dark:text-dim-3">
 					[Opcional]
 				</label>
@@ -54,7 +57,7 @@
 
 		<div class="w-full flex justify-between">
 			<p class="font-light tracking-tight">
-				Revisión v0.0.3
+				Revisión v0.0.4
 			</p>
 			<a class="self-center" href="https://github.com/cdelaof26/" target="_blank">
 				<img class="w-6 dark:invert" src="assets/github.svg" alt="GitHub">

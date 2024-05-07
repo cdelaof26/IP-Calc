@@ -1,174 +1,4 @@
 
-// Class blueprint: https://stackoverflow.com/questions/44447847/enums-in-javascript-with-es6
-class IPv4ValidationResult {
-    static #_EMPTY = 0;
-    static #_MALFORMED = 1;
-    static #_INVALID_RANGE = 2;
-    static #_VALID = 3;
-
-    static get EMPTY() { return this.#_EMPTY; }
-    static get MALFORMED() { return this.#_MALFORMED; }
-    static get INVALID_RANGE() { return this.#_INVALID_RANGE; }
-    static get VALID() { return this.#_VALID; }
-}
-
-
-class NumberValidationResult {
-    static #_EMPTY = 0;
-    static #_MALFORMED = 1;
-    static #_INTEGER = 2;
-    static #_FLOAT = 3;
-
-    static get EMPTY() { return this.#_EMPTY; }
-    static get MALFORMED() { return this.#_MALFORMED; }
-    static get INTEGER() { return this.#_INTEGER; }
-    static get FLOAT() { return this.#_FLOAT; }
-}
-
-
-function is_ipv4(ipv4) {
-    ipv4 = "" + ipv4;
-    if (ipv4.trim().length === 0)
-        return IPv4ValidationResult.EMPTY;
-
-    if (ipv4.replace(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/, "") !== "")
-        return IPv4ValidationResult.MALFORMED;
-
-    let valid_ip_range = true;
-    ipv4.split(".").forEach((oct) => {
-        oct = parseInt(oct);
-        valid_ip_range = valid_ip_range && oct > -1 && oct < 256;
-    });
-
-    return valid_ip_range ? IPv4ValidationResult.VALID : IPv4ValidationResult.INVALID_RANGE;
-}
-
-
-function process_ipv4(str_ipv4, to_bin, return_as_array) {
-    let ip_array = str_ipv4.split(".");
-    let ip_int_array = [];
-
-    for (let i = 0; i < ip_array.length; i++) {
-        let is_bin = ip_array[i].replace(/[01]{8}/, "") === "";
-        if (to_bin && is_bin) {
-            ip_int_array[i] = ip_array[i].padStart(8, "0");
-            continue;
-        }
-
-        ip_int_array[i] = parseInt(ip_array[i], is_bin ? 2 : 10);
-
-        if (to_bin)
-            ip_int_array[i] = ip_int_array[i].toString(2).padStart(8, "0");
-    }
-
-    if (!return_as_array)
-        return ip_int_array.join(".");
-
-    return ip_int_array;
-}
-
-
-function number_to_mask_ip(number, to_bin, return_as_array) {
-    let ip = "1".repeat(number).padEnd(32, "0");
-    let bin_array = ip.match(/[01]{8}/g);
-
-    if (to_bin && return_as_array)
-        return bin_array;
-
-    let bin_ip = bin_array.join(".");
-    if (to_bin)
-        return bin_ip;
-
-    return process_ipv4(bin_ip, false, return_as_array);
-}
-
-
-function is_number(value) {
-    value = "" + value;
-    if (value.trim().length === 0)
-        return NumberValidationResult.EMPTY;
-
-    if (value.replace(/-?\d+/, "") === "")
-        return NumberValidationResult.INTEGER;
-
-    return value.replace(/-?\d+\.?\d*/, "") === "" ? NumberValidationResult.FLOAT : NumberValidationResult.MALFORMED;
-}
-
-
-function validate_data(ip, mask, optional) {
-    set_error("");
-
-    let ipv4_test_result = is_ipv4(ip);
-    if (ipv4_test_result !== IPv4ValidationResult.VALID) {
-        set_error(
-            ipv4_test_result === IPv4ValidationResult.EMPTY ? "El campo de IP no puede estar vacío":
-                ipv4_test_result === IPv4ValidationResult.MALFORMED ? "La IP ingresada no es válida":
-                    "El rango de un octeto en la IP está fuera del rango [0 - 255]"
-        );
-        return null;
-    }
-
-    let mask_test_result = is_number(mask);
-    let ip_mask_test_result = is_ipv4(mask);
-    if (mask_test_result !== NumberValidationResult.INTEGER && ip_mask_test_result !== IPv4ValidationResult.VALID) {
-        set_error(
-            mask_test_result === NumberValidationResult.EMPTY && ip_mask_test_result === IPv4ValidationResult.EMPTY ? "El campo de máscara no puede estar vacío":
-                ip_mask_test_result === IPv4ValidationResult.INVALID_RANGE ? "El rango de un octeto en la máscara está fuera del rango [0 - 255]":
-                    mask_test_result === NumberValidationResult.FLOAT ? "El valor en máscara de red no puede ser un número decimal":
-                        "El valor en máscara de red es inválido"
-        );
-        return null;
-    }
-
-    if (ip_mask_test_result === IPv4ValidationResult.VALID) {
-        let ipv4_mask = process_ipv4(mask, true, false);
-        ipv4_mask = ipv4_mask.replaceAll(".", "");
-        ipv4_mask = ipv4_mask.replace(/^1+/, "");
-        if (ipv4_mask.includes("1")) {
-            set_error("La máscara IPv4 no es válida");
-            return null;
-        }
-
-        mask = 32 - ipv4_mask.length;
-    } else
-        mask = parseInt(mask);
-
-    if (optional.trim() !== "") {
-        let optional_test_result = is_number(optional);
-        if (optional_test_result !== NumberValidationResult.INTEGER) {
-            set_error(
-                optional_test_result === NumberValidationResult.MALFORMED ? "El valor en el campo 'opcional' es inválido" :
-                "El valor en el campo 'opcional' debe ser un número entero positivo"
-            );
-            return null;
-        } else if (parseInt(optional) < 0) {
-            set_error("El valor en el campo 'opcional' no puede ser negativo");
-            return null;
-        }
-    }
-
-    return mask;
-}
-
-
-function is_network_address(ip, mask_bit_amount) {
-    let bin_str_ip = process_ipv4(ip, true, false);
-    let bin_str_mask = number_to_mask_ip(mask_bit_amount, true, false);
-
-    let network_address = "";
-    for (let i = 0; i < bin_str_mask.length; i++) {
-        if (bin_str_mask.charAt(i) === '.') {
-            network_address += ".";
-            continue;
-        }
-
-        network_address += bin_str_mask.charAt(i) === '1' ? bin_str_ip.charAt(i) : '0';
-    }
-
-    return [bin_str_ip === network_address, network_address];
-}
-
-
 function calculate_last_host_and_broadcast(bin_network_ip, mask, as_binary) {
     let bin_network_array = bin_network_ip.split("");
     let i = mask + Math.floor(mask / 8);
@@ -188,14 +18,14 @@ function calculate_last_host_and_broadcast(bin_network_ip, mask, as_binary) {
 }
 
 
-function create_and_show_ip_data(container, bin_network_ip, mask, as_binary) {
+function create_and_show_ip_data(container, title, bin_network_ip, mask, as_binary, show_bin_button) {
     let network_ip = process_ipv4(bin_network_ip, as_binary, false);
 
     let subtitle = document.createElement("p");
-    subtitle.textContent = "Propiedades";
+    subtitle.textContent = title;
     subtitle.className = "my-1 ml-4 text-lg md:text-xl font-bold";
 
-    let html_network_ip = create_div_content("Dirección de red:", network_ip, "text-blue-600");
+    let html_network_ip = create_div_content("Dirección de red:", network_ip, "text-blue-600 dark:text-blue-400");
 
     let value = network_ip.replace(!as_binary ? /\d{1,3}$/ : /[01]{8}$/, "1".padStart(as_binary ? 8 : 0, "0"));
     let html_first_ip = create_div_content("Primer host:", value, "text-sky-600");
@@ -204,24 +34,28 @@ function create_and_show_ip_data(container, bin_network_ip, mask, as_binary) {
     let html_last_ip = create_div_content("Último host:", last_host_broadcast[0], "text-sky-600");
     let html_broadcast = create_div_content("Broadcast:", last_host_broadcast[1], "text-indigo-500");
 
-    value = Math.pow(2, 32 - mask) - 2;
-    let html_hosts = create_div_content("Cantidad de hosts:", as_binary ? value.toString(2) : value, "text-violet-600");
-
-    let button = document.createElement("button");
-    button.textContent = "Ver en " + (as_binary ? "decimal" : "binario");
-    button.className = "w-40 font-sans hidden md:block m-1 p-1 bg-body-0 dark:bg-body-1 duration-150 border border-dim-0 dark:border-dim-1 rounded-lg " + (as_binary ? "bg-sky-500 text-[#FFF] transition-[background] hover:bg-sky-600" : "transition-[border] hover:border-sky-500");
-    button.id = "data_toggle";
-    button.onclick = () => {
-        create_and_fill_address_props_div(bin_network_ip, mask, !as_binary);
-        let html_ip = document.getElementById("user_ip");
-        html_ip.textContent = process_ipv4(html_ip.textContent.split("/")[0], !as_binary, false) + (as_binary ? "/" + mask : "");
-
-        document.getElementById("user_mask").textContent = number_to_mask_ip(mask, !as_binary, false) + (as_binary ? " = " + mask : "");
-    };
-
-    [subtitle, html_network_ip, html_first_ip, html_last_ip, html_broadcast, html_hosts, button].forEach((e) => {
+    [subtitle, html_network_ip, html_first_ip, html_last_ip, html_broadcast].forEach((e) => {
         container.appendChild(e);
     });
+
+    if (show_bin_button) {
+        value = Math.pow(2, 32 - mask) - 2;
+        let html_hosts = create_div_content("Cantidad de hosts:", as_binary ? value.toString(2) : value, "text-violet-600");
+        container.appendChild(html_hosts);
+
+        let button = document.createElement("button");
+        button.textContent = "Ver en " + (as_binary ? "decimal" : "binario");
+        button.className = "w-40 font-sans hidden md:block m-1 p-1 bg-body-0 dark:bg-body-1 duration-150 border border-dim-0 dark:border-dim-1 rounded-lg " + (as_binary ? "bg-sky-500 text-[#FFF] transition-[background] hover:bg-sky-600" : "transition-[border] hover:border-sky-500");
+        button.id = "data_toggle";
+        button.onclick = () => {
+            create_and_fill_address_props_div(bin_network_ip, mask, !as_binary);
+            let html_ip = document.getElementById("user_ip");
+            html_ip.textContent = process_ipv4(html_ip.textContent.split("/")[0], !as_binary, false) + (as_binary ? "/" + mask : "");
+
+            document.getElementById("user_mask").textContent = number_to_mask_ip(mask, !as_binary, false) + (as_binary ? " = " + mask : "");
+        };
+        container.appendChild(button);
+    }
 }
 
 
@@ -232,7 +66,7 @@ function create_and_fill_address_props_div(network_address, mask, as_binary) {
 
     document.getElementById("address_information").replaceWith(div);
 
-    create_and_show_ip_data(div, network_address, mask, as_binary);
+    create_and_show_ip_data(div, "Propiedades", network_address, mask, as_binary, true);
 }
 
 
@@ -245,14 +79,41 @@ function create_address_sub_netting_div() {
 }
 
 
-function create_error_div(error_msg) {
-    let div = document.createElement("div");
-    div.className = "p-2 bg-red-100 dark:bg-red-950 rounded-lg";
-    let p = document.createElement("p");
-    p.className = "border-l-4 border-red-500 pl-4";
-    p.textContent = error_msg;
-    div.appendChild(p);
-    return div;
+function alter_network_address(address, mask, padding, id) {
+    id = id.toString(2).padStart(padding, "0");
+
+    let address_as_array = address.split("");
+
+    for (let i = mask + 1, j = 0; i < address_as_array.length && j < id.length; i++) {
+        if (address_as_array[i] === ".")
+            continue;
+
+        address_as_array[i] = id.charAt(j);
+        j++;
+    }
+
+    return address_as_array.join("");
+}
+
+
+function calculate_sub_nets(container, network_address, mask, bits_for_sub_netting) {
+    let new_mask = mask + bits_for_sub_netting;
+
+    container.appendChild(create_div_content("Máscara", number_to_mask_ip(new_mask, false, false) + " = " + new_mask, ""));
+
+    let sub_networks = Math.pow(2, bits_for_sub_netting);
+    let i = 0;
+    for (i = 0; i < sub_networks && i < 500; i++)
+        create_and_show_ip_data(
+            container, i + 1, alter_network_address(network_address, mask, bits_for_sub_netting, i), new_mask, false, false
+        );
+
+    if (i === 500)
+        container.appendChild(create_error_div("Programa finalizado... Se visualizan 500 subredes"));
+
+    container.appendChild(create_div_content("Cantidad de subredes:", sub_networks, "py-10 text-red-500 dark:text-red-400"));
+    container.appendChild(create_div_content("Cantidad de hosts:", Math.pow(2, 32 - mask) - 2 * sub_networks, "text-sky-500"));
+    container.appendChild(create_div_content("Cantidad de hosts por subred:", Math.pow(2, 32 - new_mask), "text-sky-500"));
 }
 
 
@@ -270,15 +131,22 @@ function fill_address_sub_netting_div(network_address, mask, optional_data) {
     if (selected_optional_datatype === OptionalDataType.SUB_NETWORKS_AMOUNT)
         optional_data = Math.ceil(Math.log2(optional_data));
 
+    if (selected_optional_datatype === OptionalDataType.HOST_BITS) {
+        bits_for_hosts = optional_data;
+        optional_data = 32 - (mask + optional_data);
+    }
+
     if (selected_optional_datatype === OptionalDataType.HOST_PER_SUB_NET) {
-        optional_data += 2;
         bits_for_hosts = optional_data < 2 ? 1 : Math.ceil(Math.log2(optional_data));
+        console.log("optional_data", optional_data)
         optional_data = 32 - mask - bits_for_hosts;
+
+        console.log("bits_for_hosts", bits_for_hosts);
     }
 
     if (mask + optional_data <= 32 && optional_data > 0) {
-        subtitle.textContent += " - bits a utilizar: " + optional_data;
-
+        subtitle.textContent += " - " + optional_data + " bits";
+        calculate_sub_nets(container, network_address, mask, optional_data);
     } else
         container.appendChild(
             create_error_div(
@@ -303,7 +171,7 @@ function perform_operation() {
         return;
 
     if (mask < 1 || mask > 32) {
-        set_error("El valor en máscara de red está fuera del rango [1 - 32]");
+        set_data_error_msg("El valor en máscara de red está fuera del rango [1 - 32]");
         return;
     }
 
