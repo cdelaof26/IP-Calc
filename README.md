@@ -27,6 +27,12 @@ Para el desarrollo se requiere de lo siguiente:
 
 ### Historial de cambios
 
+### v0.0.5
+- Arreglados varios errores en cálculos y agregadas varias 
+  excepciones
+- Se cambiaron los colores del app en modo oscuro
+- Se agregó variable modificable por consola
+
 ### v0.0.4
 - Agregado campo opcional `Bits para hosts`
 - Agregada funcionalidad de sub netting

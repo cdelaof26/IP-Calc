@@ -25,14 +25,20 @@ function create_and_show_ip_data(container, title, bin_network_ip, mask, as_bina
     subtitle.textContent = title;
     subtitle.className = "my-1 ml-4 text-lg md:text-xl font-bold";
 
-    let html_network_ip = create_div_content("Dirección de red:", network_ip, "text-blue-600 dark:text-blue-400");
+    let html_network_ip = create_div_content("Dirección de red:", network_ip, "text-blue-600 dark:text-rose-600");
+    let value;
+    if (!as_binary) {
+        let ip_split = network_ip.split(".");
+        ip_split[ip_split.length - 1] = parseInt(ip_split[ip_split.length - 1]) + 1;
+        value = ip_split.join(".");
+    } else
+        value = network_ip.replace(/[01]$/, "1");
 
-    let value = network_ip.replace(!as_binary ? /\d{1,3}$/ : /[01]{8}$/, "1".padStart(as_binary ? 8 : 0, "0"));
-    let html_first_ip = create_div_content("Primer host:", value, "text-sky-600");
+    let html_first_ip = create_div_content("Primer host:", value, "text-sky-600 dark:text-pink-600");
 
     let last_host_broadcast = calculate_last_host_and_broadcast(bin_network_ip, mask, as_binary);
-    let html_last_ip = create_div_content("Último host:", last_host_broadcast[0], "text-sky-600");
-    let html_broadcast = create_div_content("Broadcast:", last_host_broadcast[1], "text-indigo-500");
+    let html_last_ip = create_div_content("Último host:", last_host_broadcast[0], "text-sky-600 dark:text-pink-600");
+    let html_broadcast = create_div_content("Broadcast:", last_host_broadcast[1], "text-indigo-500 dark:text-rose-500");
 
     [subtitle, html_network_ip, html_first_ip, html_last_ip, html_broadcast].forEach((e) => {
         container.appendChild(e);
@@ -40,12 +46,13 @@ function create_and_show_ip_data(container, title, bin_network_ip, mask, as_bina
 
     if (show_bin_button) {
         value = Math.pow(2, 32 - mask) - 2;
-        let html_hosts = create_div_content("Cantidad de hosts:", as_binary ? value.toString(2) : value, "text-violet-600");
+        let html_hosts = create_div_content("Cantidad de hosts:", as_binary ? value.toString(2) : value, "text-violet-700 dark:text-pink-400", "");
         container.appendChild(html_hosts);
 
         let button = document.createElement("button");
         button.textContent = "Ver en " + (as_binary ? "decimal" : "binario");
-        button.className = "w-40 font-sans hidden md:block m-1 p-1 bg-body-0 dark:bg-body-1 duration-150 border border-dim-0 dark:border-dim-1 rounded-lg " + (as_binary ? "bg-sky-500 text-[#FFF] transition-[background] hover:bg-sky-600" : "transition-[border] hover:border-sky-500");
+        button.className = "w-40 font-sans hidden md:block m-1 p-1 bg-body-0 dark:bg-body-1 duration-150 border border-dim-0 dark:border-dim-1 rounded-lg "
+            + (as_binary ? "bg-sky-500 dark:bg-pink-600 text-[#FFF] transition-[background] hover:bg-sky-600 dark:hover:bg-pink-700" : "transition-[border] hover:border-sky-500 dark:hover:border-pink-600");
         button.id = "data_toggle";
         button.onclick = () => {
             create_and_fill_address_props_div(bin_network_ip, mask, !as_binary);
@@ -72,19 +79,20 @@ function create_and_fill_address_props_div(network_address, mask, as_binary) {
 
 function create_address_sub_netting_div() {
     let div = document.createElement("div");
-    div.className = "p-2 md:p-4 mt-2 bg-sidebar-0 dark:bg-sidebar-1 rounded-lg font-mono hidden";
+    div.className = "p-2 md:p-4 mt-4 bg-sidebar-0 dark:bg-sidebar-1 rounded-lg font-mono hidden";
     div.setAttribute("id", "sub_netting_data");
 
     document.getElementById("sub_netting_data").replaceWith(div);
 }
 
 
-function alter_network_address(address, mask, padding, id) {
+function update_network_address(address, mask, padding, id) {
     id = id.toString(2).padStart(padding, "0");
 
     let address_as_array = address.split("");
 
-    for (let i = mask + 1, j = 0; i < address_as_array.length && j < id.length; i++) {
+    let i = mask + Math.floor(mask / 8);
+    for (let j = 0; i < address_as_array.length && j < id.length; i++) {
         if (address_as_array[i] === ".")
             continue;
 
@@ -99,21 +107,42 @@ function alter_network_address(address, mask, padding, id) {
 function calculate_sub_nets(container, network_address, mask, bits_for_sub_netting) {
     let new_mask = mask + bits_for_sub_netting;
 
-    container.appendChild(create_div_content("Máscara", number_to_mask_ip(new_mask, false, false) + " = " + new_mask, ""));
-
     let sub_networks = Math.pow(2, bits_for_sub_netting);
-    let i = 0;
-    for (i = 0; i < sub_networks && i < 500; i++)
+    let host_amount = Math.pow(2, 32 - mask) - 2 * sub_networks;
+
+    if (new_mask === 32) {
+        container.appendChild(
+            create_error_div("Programa finalizado... Es posible calcular las subredes requeridas pero cada una tendría una dirección...")
+        );
+        return;
+    }
+
+    if (host_amount === 0) {
+        container.appendChild(
+            create_error_div("Programa finalizado... Es posible calcular las subredes requeridas pero cada una 'tendría' dos hosts, dirección de red y multicast...")
+        );
+        return;
+    }
+
+    container.appendChild(create_div_content("Máscara:", number_to_mask_ip(new_mask, false, false) + " = " + new_mask, "", "tracking-tight md:text-lg"));
+
+    let i;
+    for (i = 0; i < sub_networks && i < max_sub_networks; i++)
         create_and_show_ip_data(
-            container, i + 1, alter_network_address(network_address, mask, bits_for_sub_netting, i), new_mask, false, false
+            container, i + 1, update_network_address(network_address, mask, bits_for_sub_netting, i), new_mask, false, false
         );
 
-    if (i === 500)
-        container.appendChild(create_error_div("Programa finalizado... Se visualizan 500 subredes"));
+    if (i === max_sub_networks && i < sub_networks - 1) {
+        container.appendChild(create_error_div("Programa finalizado... Se visualizan " + (max_sub_networks + (i < sub_networks - 1 ? 1 : 0)) + " subredes"));
 
-    container.appendChild(create_div_content("Cantidad de subredes:", sub_networks, "py-10 text-red-500 dark:text-red-400"));
-    container.appendChild(create_div_content("Cantidad de hosts:", Math.pow(2, 32 - mask) - 2 * sub_networks, "text-sky-500"));
-    container.appendChild(create_div_content("Cantidad de hosts por subred:", Math.pow(2, 32 - new_mask), "text-sky-500"));
+        create_and_show_ip_data(
+            container, sub_networks, update_network_address(network_address, mask, bits_for_sub_netting, sub_networks - 1), new_mask, false, false
+        );
+    }
+
+    container.appendChild(create_div_content("Cantidad de subredes:", sub_networks, "text-sky-500 dark:text-red-600", "pt-8 font-bold"));
+    container.appendChild(create_div_content("Cantidad de hosts:", host_amount, "text-indigo-700 dark:text-pink-700", "font-bold"));
+    container.appendChild(create_div_content("Cantidad de hosts por subred:", Math.pow(2, 32 - new_mask), "text-violet-700 dark:text-rose-500", "font-bold"));
 }
 
 
@@ -138,10 +167,7 @@ function fill_address_sub_netting_div(network_address, mask, optional_data) {
 
     if (selected_optional_datatype === OptionalDataType.HOST_PER_SUB_NET) {
         bits_for_hosts = optional_data < 2 ? 1 : Math.ceil(Math.log2(optional_data));
-        console.log("optional_data", optional_data)
         optional_data = 32 - mask - bits_for_hosts;
-
-        console.log("bits_for_hosts", bits_for_hosts);
     }
 
     if (mask + optional_data <= 32 && optional_data > 0) {
@@ -162,9 +188,9 @@ function perform_operation() {
     let mask_field = document.getElementById("mask");
     let optional_field = document.getElementById("optional_data");
 
-    let ip = ip_field.value;
-    let mask = mask_field.value;
-    let optional = optional_field.value;
+    let ip = ip_field.value.trim();
+    let mask = mask_field.value.trim();
+    let optional = optional_field.value.trim();
 
     mask = validate_data(ip, mask, optional);
     if (mask === null)

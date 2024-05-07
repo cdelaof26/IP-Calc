@@ -8,13 +8,13 @@
 				<label for="ip_address" class="ml-4 text-xs uppercase text-dim-2 dark:text-dim-3">
 					Dirección IP
 				</label>
-				<input id="ip_address" class="px-2 w-full transition-[border] duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 focus:outline-none focus:ring focus:border-blue-500 rounded-lg bg-body-0 dark:bg-body-1" type="text" placeholder="192.168.100.1">
+				<input id="ip_address" class="px-2 w-full transition-[border] duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" type="text" placeholder="192.168.100.1">
 			</div>
 			<div>
 				<label for="mask" class="ml-4 text-xs uppercase text-dim-2 dark:text-dim-3">
 					Máscara de red
 				</label>
-				<input id="mask" class="px-2 w-full transition-[border] duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 focus:outline-none focus:ring focus:border-blue-500 rounded-lg bg-body-0 dark:bg-body-1" type="text" placeholder="Entero o IPv4">
+				<input id="mask" class="px-2 w-full transition-[border] duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" type="text" placeholder="Entero o IPv4">
 			</div>
 
 			<div class="my-6">
@@ -22,16 +22,16 @@
 					Selecciona el campo opcional
 				</p>
 				<div>
-					<button id="b0" class="p-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 focus:outline-none focus:ring focus:border-blue-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.SUB_NETTING_BITS)}>
+					<button id="b0" class="p-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.SUB_NETTING_BITS)}>
 						Bits para subredes
 					</button>
-					<button id="b1" class="p-2 mt-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 focus:outline-none focus:ring focus:border-blue-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.SUB_NETWORKS_AMOUNT)}>
+					<button id="b1" class="p-2 mt-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.SUB_NETWORKS_AMOUNT)}>
 						Cantidad de subredes
 					</button>
-					<button id="b2" class="p-2 mt-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 focus:outline-none focus:ring focus:border-blue-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.HOST_BITS)}>
+					<button id="b2" class="p-2 mt-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.HOST_BITS)}>
 						Bits para hosts
 					</button>
-					<button id="b3" class="p-2 mt-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 focus:outline-none focus:ring focus:border-blue-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.HOST_PER_SUB_NET)}>
+					<button id="b3" class="p-2 mt-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.HOST_PER_SUB_NET)}>
 						Cantidad de hosts por subred
 					</button>
 				</div>
@@ -41,10 +41,10 @@
 				<label id="optional_field" for="optional_data" class="text-xs uppercase text-dim-2 dark:text-dim-3">
 					[Opcional]
 				</label>
-				<input id="optional_data" class="px-2 w-full transition-[border] duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 focus:outline-none focus:ring focus:border-blue-500 rounded-lg bg-body-0 dark:bg-body-1" type="text" placeholder="0">
+				<input id="optional_data" class="px-2 w-full transition-[border] duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" type="text" placeholder="0">
 			</div>
 
-			<button id="calc_button" class="w-full h-8 font-bold text-lg bg-body-0 dark:bg-body-1 transition-[border] duration-150 border-2 border-dim-0 dark:border-dim-1 hover:border-sky-500 rounded-lg" onclick={perform_operation()}>
+			<button id="calc_button" class="w-full h-8 font-bold text-lg bg-body-0 dark:bg-body-1 transition-[border] duration-150 border-2 border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 rounded-lg" onclick={perform_operation()}>
 				Calcular
 			</button>
 
@@ -57,7 +57,7 @@
 
 		<div class="w-full flex justify-between">
 			<p class="font-light tracking-tight">
-				Revisión v0.0.4
+				Revisión v0.0.5
 			</p>
 			<a class="self-center" href="https://github.com/cdelaof26/" target="_blank">
 				<img class="w-6 dark:invert" src="assets/github.svg" alt="GitHub">

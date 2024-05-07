@@ -8,13 +8,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    console.log("    Hi!");
+    console.log("Use 'max_sub_networks = value' to set the maximum displayable sub networks");
+
     // Debug
-    /*document.getElementById("ip_address").value = "10.0.0.1";
-    document.getElementById("mask").value = "12";
-    document.getElementById("optional_data").value = "1";
+    /*document.getElementById("ip_address").value = "192.168.1.1";
+    document.getElementById("mask").value = "10";
+    document.getElementById("optional_data").value = "7";
     selected_optional_datatype = 0;
     perform_operation();*/
 });
+
+
+let max_sub_networks = 128;
 
 
 class OptionalDataType {
@@ -56,8 +62,8 @@ function set_field_type(id_type) {
 
     let properties = [
         "border", "transition-[border]", "bg-sky-500",
-        "text-[#FFF]", "dark:bg-sky-500", "transition-[background]",
-        "hover:bg-sky-600", "hover:dark:bg-sky-600"
+        "text-[#FFF]", "dark:bg-pink-600", "transition-[background]",
+        "hover:bg-sky-600", "hover:dark:bg-pink-700"
     ];
 
     for (let i = 0; i < 4; i++) {
@@ -96,7 +102,7 @@ function set_field_type(id_type) {
 
 function create_error_div(error_msg) {
     let div = document.createElement("div");
-    div.className = "p-2 bg-red-100 dark:bg-red-950 rounded-lg";
+    div.className = "mt-8 p-2 bg-red-100 dark:bg-red-950 rounded-lg";
     let p = document.createElement("p");
     p.className = "border-l-4 border-red-500 pl-4";
     p.textContent = error_msg;
@@ -105,9 +111,9 @@ function create_error_div(error_msg) {
 }
 
 
-function create_div_content(label, value, value_classes) {
+function create_div_content(label, value, value_classes, div_classes) {
     let div = document.createElement("div");
-    div.className = "flex justify-between";
+    div.className = "flex justify-between " + div_classes;
     let html_label = document.createElement("p");
     let html_value = document.createElement("p");
 
@@ -143,11 +149,13 @@ function toggle_navbar_visibility() {
     if (!navbar.classList.contains("-translate-x-full")) {
         navbar.classList.add("-translate-x-full");
         navbar_toggle_button.classList.remove("bg-sky-500");
+        navbar_toggle_button.classList.remove("dark:bg-pink-600");
         navbar_toggle_button.classList.remove("text-[#FFF]");
         error_label.classList.add("invisible");
     } else {
         navbar.classList.remove("-translate-x-full");
         navbar_toggle_button.classList.add("bg-sky-500");
+        navbar_toggle_button.classList.add("dark:bg-pink-600");
         navbar_toggle_button.classList.add("text-[#FFF]");
         error_label.classList.remove("invisible");
     }
