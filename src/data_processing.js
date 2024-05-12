@@ -14,12 +14,12 @@ function calculate_last_host_and_broadcast(bin_network_ip, mask, as_binary) {
     bin_network_array[bin_network_array.length - 1] = "1";
     let broadcast = bin_network_array.join("");
 
-    return [process_ipv4(last_host, as_binary, false), process_ipv4(broadcast, as_binary, false)];
+    return [process_ipv4(last_host, as_binary), process_ipv4(broadcast, as_binary)];
 }
 
 
 function create_and_show_ip_data(container, title, bin_network_ip, mask, as_binary, show_bin_button) {
-    let network_ip = process_ipv4(bin_network_ip, as_binary, false);
+    let network_ip = process_ipv4(bin_network_ip, as_binary);
 
     let subtitle = document.createElement("p");
     subtitle.textContent = title;
@@ -57,9 +57,9 @@ function create_and_show_ip_data(container, title, bin_network_ip, mask, as_bina
         button.onclick = () => {
             create_and_fill_address_props_div(bin_network_ip, mask, !as_binary);
             let html_ip = document.getElementById("user_ip");
-            html_ip.textContent = process_ipv4(html_ip.textContent.split("/")[0], !as_binary, false) + (as_binary ? "/" + mask : "");
+            html_ip.textContent = process_ipv4(html_ip.textContent.split("/")[0], !as_binary) + (as_binary ? "/" + mask : "");
 
-            document.getElementById("user_mask").textContent = number_to_mask_ip(mask, !as_binary, false) + (as_binary ? " = " + mask : "");
+            document.getElementById("user_mask").textContent = number_to_mask_ip(mask, !as_binary) + (as_binary ? " = " + mask : "");
         };
         container.appendChild(button);
     }
@@ -112,19 +112,30 @@ function calculate_sub_nets(container, network_address, mask, bits_for_sub_netti
 
     if (new_mask === 32) {
         container.appendChild(
-            create_error_div("Programa finalizado... Es posible calcular las subredes requeridas pero cada una tendría una dirección...")
+            create_error_div(
+                "Programa finalizado... " +
+                "Es posible calcular las subredes requeridas pero cada una tendría una IP (dirección de red)...", false
+            )
         );
         return;
     }
 
     if (host_amount === 0) {
         container.appendChild(
-            create_error_div("Programa finalizado... Es posible calcular las subredes requeridas pero cada una 'tendría' dos hosts, dirección de red y multicast...")
+            create_error_div(
+                "Programa finalizado... " +
+                "Es posible calcular las subredes requeridas pero cada una tendría dos IP: dirección de red y multicast...", false
+            )
         );
         return;
     }
 
-    container.appendChild(create_div_content("Máscara:", number_to_mask_ip(new_mask, false, false) + " = " + new_mask, "", "tracking-tight md:text-lg"));
+    container.appendChild(create_div_content("Máscara:", number_to_mask_ip(new_mask, false) + " = " + new_mask, "", "tracking-tight md:text-lg"));
+
+    if (typeof max_sub_networks !== "number" || max_sub_networks < 0) {
+        container.appendChild(create_error_div("Internal error", false));
+        throw TypeError("Invalid max_sub_networks value: '" + max_sub_networks + "'");
+    }
 
     let i;
     for (i = 0; i < sub_networks && i < max_sub_networks; i++)
@@ -133,7 +144,12 @@ function calculate_sub_nets(container, network_address, mask, bits_for_sub_netti
         );
 
     if (i === max_sub_networks && i < sub_networks - 1) {
-        container.appendChild(create_error_div("Programa finalizado... Se visualizan " + (max_sub_networks + (i < sub_networks - 1 ? 1 : 0)) + " subredes"));
+        container.appendChild(
+            create_error_div(
+                "Programa finalizado... " +
+                "Se visualizan " + (max_sub_networks + (i < sub_networks - 1 ? 1 : 0)) + " subredes.", true
+            )
+        );
 
         create_and_show_ip_data(
             container, sub_networks, update_network_address(network_address, mask, bits_for_sub_netting, sub_networks - 1), new_mask, false, false
@@ -141,8 +157,8 @@ function calculate_sub_nets(container, network_address, mask, bits_for_sub_netti
     }
 
     container.appendChild(create_div_content("Cantidad de subredes:", sub_networks, "text-sky-500 dark:text-red-600", "pt-8 font-bold"));
-    container.appendChild(create_div_content("Cantidad de hosts:", host_amount, "text-indigo-700 dark:text-pink-700", "font-bold"));
-    container.appendChild(create_div_content("Cantidad de hosts por subred:", Math.pow(2, 32 - new_mask), "text-violet-700 dark:text-rose-500", "font-bold"));
+    container.appendChild(create_div_content("Cantidad total de hosts:", host_amount, "text-indigo-700 dark:text-pink-700", "font-bold"));
+    container.appendChild(create_div_content("Cantidad de direcciones por subred:", Math.pow(2, 32 - new_mask), "text-violet-700 dark:text-rose-500", "font-bold"));
 }
 
 
@@ -165,19 +181,29 @@ function fill_address_sub_netting_div(network_address, mask, optional_data) {
         optional_data = 32 - (mask + optional_data);
     }
 
-    if (selected_optional_datatype === OptionalDataType.HOST_PER_SUB_NET) {
+    if (selected_optional_datatype === OptionalDataType.IP_ADDRESSES_AMOUNT) {
         bits_for_hosts = optional_data < 2 ? 1 : Math.ceil(Math.log2(optional_data));
         optional_data = 32 - mask - bits_for_hosts;
+        if (optional_data === 0) {
+            container.appendChild(
+                create_error_div(
+                    "No hay suficientes bits para realizar subredes. Se requieren de "
+                    + bits_for_hosts + " bits para direcciones de red.", false
+                )
+            );
+            return;
+        }
     }
 
-    if (mask + optional_data <= 32 && optional_data > 0) {
+    if (mask + optional_data <= 32 && optional_data >= 0) {
         subtitle.textContent += " - " + optional_data + " bits";
         calculate_sub_nets(container, network_address, mask, optional_data);
     } else
         container.appendChild(
             create_error_div(
-                "No hay suficientes bits para realizar la operación. " +
-                "bits_requeridos = " + (optional_data  > 0 ? optional_data : bits_for_hosts) + " y bits_disponibles = " + (32 - mask)
+                "No hay suficientes bits para realizar la operación. "
+                + "Se requieren de " + (optional_data > 0 ? optional_data : bits_for_hosts)
+                + " bits pero solo hay " + (32 - mask) + " disponibles.", false
             )
         );
 }
@@ -203,14 +229,14 @@ function perform_operation() {
 
     toggle_navbar_visibility();
 
-    let network_address = is_network_address(ip, mask);
-    create_and_fill_address_props_div(network_address[1], mask, false);
+    let network_address = get_network_address(ip, mask);
+    create_and_fill_address_props_div(network_address, mask, false);
     create_address_sub_netting_div();
 
     document.getElementById("calc_button").focus({ focusVisible: true });
     document.getElementById("user_ip").textContent = ip + "/" + mask;
-    document.getElementById("user_mask").textContent = number_to_mask_ip(mask, false, false) + " = " + mask;
+    document.getElementById("user_mask").textContent = number_to_mask_ip(mask, false) + " = " + mask;
 
     if (optional !== "" && optional !== "0")  // An address was given with optional parameter
-        fill_address_sub_netting_div(network_address[1], mask, parseInt(optional));
+        fill_address_sub_netting_div(network_address, mask, parseInt(optional));
 }

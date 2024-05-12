@@ -9,13 +9,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     console.log("    Hi!");
-    console.log("Use 'max_sub_networks = value' to set the maximum displayable sub networks");
+    console.log("Use 'max_sub_networks = value' to set the maximum amount of sub-networks to be shown");
+    console.log("  Keep in mind that setting it too high might be memory consuming!");
 
     // Debug
-    /*document.getElementById("ip_address").value = "192.168.1.1";
-    document.getElementById("mask").value = "10";
-    document.getElementById("optional_data").value = "7";
-    selected_optional_datatype = 0;
+    /*document.getElementById("ip_address").value = "0.0.0.0";
+    document.getElementById("mask").value = "1";
+    document.getElementById("optional_data").value = "2147483646";
+    selected_optional_datatype = 3;
     perform_operation();*/
 });
 
@@ -27,12 +28,12 @@ class OptionalDataType {
     static #_SUB_NETTING_BITS = 0;
     static #_SUB_NETWORKS_AMOUNT = 1;
     static #_HOST_BITS = 2;
-    static #_HOST_PER_SUB_NET = 3;
+    static #_IP_ADDRESSES_AMOUNT = 3;
 
     static get SUB_NETTING_BITS() { return this.#_SUB_NETTING_BITS; }
     static get SUB_NETWORKS_AMOUNT() { return this.#_SUB_NETWORKS_AMOUNT; }
     static get HOST_BITS() { return this.#_HOST_BITS; }
-    static get HOST_PER_SUB_NET() { return this.#_HOST_PER_SUB_NET; }
+    static get IP_ADDRESSES_AMOUNT() { return this.#_IP_ADDRESSES_AMOUNT; }
 }
 
 
@@ -91,18 +92,18 @@ function set_field_type(id_type) {
         label.textContent = "Cantidad de subredes [Opcional]";
     else if (id_type === OptionalDataType.HOST_BITS)
         label.textContent = "Bits para hosts [Opcional]";
-    else if (id_type === OptionalDataType.HOST_PER_SUB_NET)
-        label.textContent = "Cantidad de hosts por subred [Opcional]";
+    else if (id_type === OptionalDataType.IP_ADDRESSES_AMOUNT)
+        label.textContent = "Cantidad de direcciones por subred [Opcional]";
     else {
         set_data_error_msg("Internal error");
-        throw TypeError("El id '" + id_type + "' no es válido");
+        throw TypeError("Invalid id_type: '" + id_type + "'");
     }
 }
 
 
-function create_error_div(error_msg) {
+function create_error_div(error_msg, add_margin) {
     let div = document.createElement("div");
-    div.className = "mt-8 p-2 bg-red-100 dark:bg-red-950 rounded-lg";
+    div.className = "p-2 bg-red-100 dark:bg-red-950 rounded-lg " + (add_margin ? "my-6" : "");
     let p = document.createElement("p");
     p.className = "border-l-4 border-red-500 pl-4";
     p.textContent = error_msg;

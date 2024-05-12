@@ -44,7 +44,7 @@ function is_ipv4(ipv4) {
 }
 
 
-function process_ipv4(str_ipv4, to_bin, return_as_array) {
+function process_ipv4(str_ipv4, to_bin) {
     let ip_array = str_ipv4.split(".");
     let ip_int_array = [];
 
@@ -61,25 +61,18 @@ function process_ipv4(str_ipv4, to_bin, return_as_array) {
             ip_int_array[i] = ip_int_array[i].toString(2).padStart(8, "0");
     }
 
-    if (!return_as_array)
-        return ip_int_array.join(".");
-
-    return ip_int_array;
+    return ip_int_array.join(".");
 }
 
 
-function number_to_mask_ip(number, to_bin, return_as_array) {
+function number_to_mask_ip(number, to_bin) {
     let ip = "1".repeat(number).padEnd(32, "0");
-    let bin_array = ip.match(/[01]{8}/g);
 
-    if (to_bin && return_as_array)
-        return bin_array;
-
-    let bin_ip = bin_array.join(".");
+    let bin_ip = ip.match(/[01]{8}/g).join(".");
     if (to_bin)
         return bin_ip;
 
-    return process_ipv4(bin_ip, false, return_as_array);
+    return process_ipv4(bin_ip, false);
 }
 
 
@@ -101,9 +94,9 @@ function validate_data(ip, mask, optional) {
     let ipv4_test_result = is_ipv4(ip);
     if (ipv4_test_result !== IPv4ValidationResult.VALID) {
         set_data_error_msg(
-            ipv4_test_result === IPv4ValidationResult.EMPTY ? "El campo de IP no puede estar vacío":
-                ipv4_test_result === IPv4ValidationResult.MALFORMED ? "La IP ingresada no es válida":
-                    "El rango de un octeto en la IP está fuera del rango [0 - 255]"
+            ipv4_test_result === IPv4ValidationResult.EMPTY ? "El campo de IP no puede estar vacío" :
+            ipv4_test_result === IPv4ValidationResult.MALFORMED ? "La IP ingresada no es válida" :
+                "El rango de un octeto en la IP está fuera del rango [0 - 255]"
         );
         return null;
     }
@@ -112,16 +105,16 @@ function validate_data(ip, mask, optional) {
     let ip_mask_test_result = is_ipv4(mask);
     if (mask_test_result !== NumberValidationResult.INTEGER && ip_mask_test_result !== IPv4ValidationResult.VALID) {
         set_data_error_msg(
-            mask_test_result === NumberValidationResult.EMPTY && ip_mask_test_result === IPv4ValidationResult.EMPTY ? "El campo de máscara no puede estar vacío":
-                ip_mask_test_result === IPv4ValidationResult.INVALID_RANGE ? "El rango de un octeto en la máscara está fuera del rango [0 - 255]":
-                    mask_test_result === NumberValidationResult.FLOAT ? "El valor en máscara de red no puede ser un número decimal":
-                        "El valor en máscara de red es inválido"
+            mask_test_result === NumberValidationResult.EMPTY && ip_mask_test_result === IPv4ValidationResult.EMPTY ? "El campo de máscara no puede estar vacío" :
+            ip_mask_test_result === IPv4ValidationResult.INVALID_RANGE ? "El rango de un octeto en la máscara está fuera del rango [0 - 255]" :
+            mask_test_result === NumberValidationResult.FLOAT ? "El valor en 'máscara de red' no puede ser un número decimal" :
+                "El valor en 'máscara de red' es inválido"
         );
         return null;
     }
 
     if (ip_mask_test_result === IPv4ValidationResult.VALID) {
-        let ipv4_mask = process_ipv4(mask, true, false);
+        let ipv4_mask = process_ipv4(mask, true);
         ipv4_mask = ipv4_mask.replaceAll(".", "");
         ipv4_mask = ipv4_mask.replace(/^1+/, "");
         if (ipv4_mask.includes("1")) {
@@ -151,9 +144,9 @@ function validate_data(ip, mask, optional) {
 }
 
 
-function is_network_address(ip, mask_bit_amount) {
-    let bin_str_ip = process_ipv4(ip, true, false);
-    let bin_str_mask = number_to_mask_ip(mask_bit_amount, true, false);
+function get_network_address(ip, mask_bit_amount) {
+    let bin_str_ip = process_ipv4(ip, true);
+    let bin_str_mask = number_to_mask_ip(mask_bit_amount, true);
 
     let network_address = "";
     for (let i = 0; i < bin_str_mask.length; i++) {
@@ -165,5 +158,5 @@ function is_network_address(ip, mask_bit_amount) {
         network_address += bin_str_mask.charAt(i) === '1' ? bin_str_ip.charAt(i) : '0';
     }
 
-    return [bin_str_ip === network_address, network_address];
+    return network_address;
 }

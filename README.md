@@ -27,6 +27,10 @@ Para el desarrollo se requiere de lo siguiente:
 
 ### Historial de cambios
 
+### v0.0.6
+- Se cambiaron algunas de las etiquetas para dar más 
+  claridad y se agregaron validaciones menores
+
 ### v0.0.5
 - Arreglados varios errores en cálculos y agregadas varias 
   excepciones
