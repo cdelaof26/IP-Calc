@@ -91,15 +91,8 @@ function is_number(value) {
 function validate_data(ip, mask, optional) {
     set_data_error_msg("");
 
-    let ipv4_test_result = is_ipv4(ip);
-    if (ipv4_test_result !== IPv4ValidationResult.VALID) {
-        set_data_error_msg(
-            ipv4_test_result === IPv4ValidationResult.EMPTY ? "El campo de IP no puede estar vacío" :
-            ipv4_test_result === IPv4ValidationResult.MALFORMED ? "La IP ingresada no es válida" :
-                "El rango de un octeto en la IP está fuera del rango [0 - 255]"
-        );
-        return null;
-    }
+    let valid_mask = false;
+    let use_optional_data = optional.trim() !== "";
 
     let mask_test_result = is_number(mask);
     let ip_mask_test_result = is_ipv4(mask);
@@ -111,7 +104,8 @@ function validate_data(ip, mask, optional) {
                 "El valor en 'máscara de red' es inválido"
         );
         return null;
-    }
+    } else
+        valid_mask = true;
 
     if (ip_mask_test_result === IPv4ValidationResult.VALID) {
         let ipv4_mask = process_ipv4(mask, true);
@@ -126,7 +120,8 @@ function validate_data(ip, mask, optional) {
     } else
         mask = parseInt(mask);
 
-    if (optional.trim() !== "") {
+
+    if (use_optional_data) {
         let optional_test_result = is_number(optional);
         if (optional_test_result !== NumberValidationResult.INTEGER) {
             set_data_error_msg(
@@ -138,6 +133,20 @@ function validate_data(ip, mask, optional) {
             set_data_error_msg("El valor en el campo 'opcional' no puede ser negativo");
             return null;
         }
+    }
+
+
+    let ipv4_test_result = is_ipv4(ip);
+    if (valid_mask && !use_optional_data && ipv4_test_result === IPv4ValidationResult.EMPTY)
+        return mask;
+
+    if (ipv4_test_result !== IPv4ValidationResult.VALID) {
+        set_data_error_msg(
+            ipv4_test_result === IPv4ValidationResult.EMPTY ? "El campo de IP no puede estar vacío" :
+            ipv4_test_result === IPv4ValidationResult.MALFORMED ? "La IP ingresada no es válida" :
+                "El rango de un octeto en la IP está fuera del rango [0 - 255]"
+        );
+        return null;
     }
 
     return mask;

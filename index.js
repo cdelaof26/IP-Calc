@@ -12,11 +12,12 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Use 'max_sub_networks = value' to set the maximum amount of sub-networks to be shown");
     console.log("  Keep in mind that setting it too high might be memory consuming!");
 
+    if (get_width() < 700)
+        toggle_navbar_visibility();
+
     // Debug
-    /*document.getElementById("ip_address").value = "0.0.0.0";
-    document.getElementById("mask").value = "1";
-    document.getElementById("optional_data").value = "2147483646";
-    selected_optional_datatype = 3;
+    /*document.getElementById("ip_address").value = "10.0.0.1";
+    document.getElementById("mask").value = "4";
     perform_operation();*/
 });
 
@@ -160,4 +161,15 @@ function toggle_navbar_visibility() {
         navbar_toggle_button.classList.add("text-[#FFF]");
         error_label.classList.remove("invisible");
     }
+}
+
+function get_width() {
+    // Function extracted from: https://stackoverflow.com/questions/1038727/how-to-get-browser-width-using-javascript-code
+    return Math.max(
+        document.body.scrollWidth,
+        document.documentElement.scrollWidth,
+        document.body.offsetWidth,
+        document.documentElement.offsetWidth,
+        document.documentElement.clientWidth
+    );
 }

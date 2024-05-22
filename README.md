@@ -27,6 +27,14 @@ Para el desarrollo se requiere de lo siguiente:
 
 ### Historial de cambios
 
+### v0.0.7
+- Se agregó función para convertir máscaras de red
+- Se mejoró el diseño en `Mobile`
+- El botón para subir rápidamente ahora es visible en 
+  todos los dispositivos
+- Ahora el sidebar es visible cuando se carga la 
+  página web en dispositivos mobiles
+
 ### v0.0.6
 - Se cambiaron algunas de las etiquetas para dar más 
   claridad y se agregaron validaciones menores

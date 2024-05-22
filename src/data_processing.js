@@ -45,9 +45,13 @@ function create_and_show_ip_data(container, title, bin_network_ip, mask, as_bina
     });
 
     if (show_bin_button) {
-        value = Math.pow(2, 32 - mask) - 2;
-        let html_hosts = create_div_content("Cantidad de hosts:", as_binary ? value.toString(2) : value, "text-violet-700 dark:text-pink-400", "");
+        value = Math.abs(Math.pow(2, 32 - mask) - 2);
+        value = as_binary ? value.toString(2).padStart(32, "0") : value;
+        let html_hosts = create_div_content("Cantidad de hosts:", value, "text-violet-700 dark:text-pink-400", "");
         container.appendChild(html_hosts);
+
+        if (get_width() < 950)
+            return;
 
         let button = document.createElement("button");
         button.textContent = "Ver en " + (as_binary ? "decimal" : "binario");
@@ -55,7 +59,8 @@ function create_and_show_ip_data(container, title, bin_network_ip, mask, as_bina
             + (as_binary ? "bg-sky-500 dark:bg-pink-600 text-[#FFF] transition-[background] hover:bg-sky-600 dark:hover:bg-pink-700" : "transition-[border] hover:border-sky-500 dark:hover:border-pink-600");
         button.id = "data_toggle";
         button.onclick = () => {
-            create_and_fill_address_props_div(bin_network_ip, mask, !as_binary);
+            let div = create_and_replace_div(true);
+            create_and_show_ip_data(div, "Propiedades", bin_network_ip, mask, !as_binary, true);
             let html_ip = document.getElementById("user_ip");
             html_ip.textContent = process_ipv4(html_ip.textContent.split("/")[0], !as_binary) + (as_binary ? "/" + mask : "");
 
@@ -66,23 +71,16 @@ function create_and_show_ip_data(container, title, bin_network_ip, mask, as_bina
 }
 
 
-function create_and_fill_address_props_div(network_address, mask, as_binary) {
+function create_and_replace_div(props_div) {
+    let div_id = props_div ? "address_information" : "sub_netting_data";
+
     let div = document.createElement("div");
-    div.className = "p-2 md:p-4 mt-2 bg-sidebar-0 dark:bg-sidebar-1 rounded-lg font-mono";
-    div.setAttribute("id", "address_information");
+    div.className = "p-2 md:p-4 bg-sidebar-0 dark:bg-sidebar-1 rounded-lg font-mono " + (props_div ? "mt-2" : "mt-4 hidden");
+    div.setAttribute("id", div_id);
 
-    document.getElementById("address_information").replaceWith(div);
+    document.getElementById(div_id).replaceWith(div);
 
-    create_and_show_ip_data(div, "Propiedades", network_address, mask, as_binary, true);
-}
-
-
-function create_address_sub_netting_div() {
-    let div = document.createElement("div");
-    div.className = "p-2 md:p-4 mt-4 bg-sidebar-0 dark:bg-sidebar-1 rounded-lg font-mono hidden";
-    div.setAttribute("id", "sub_netting_data");
-
-    document.getElementById("sub_netting_data").replaceWith(div);
+    return div;
 }
 
 
@@ -228,12 +226,20 @@ function perform_operation() {
     }
 
     toggle_navbar_visibility();
+    document.getElementById("calc_button").focus({ focusVisible: true });
+    create_and_replace_div(false);
+
+    if (ip.trim().length === 0) {
+        create_and_replace_div(true).classList.add("hidden");
+        document.getElementById("user_ip").textContent = "Conversión de máscara";
+        document.getElementById("user_mask").textContent = number_to_mask_ip(mask, false) + " = " + mask;
+        return;
+    }
 
     let network_address = get_network_address(ip, mask);
-    create_and_fill_address_props_div(network_address, mask, false);
-    create_address_sub_netting_div();
+    let div = create_and_replace_div(true);
+    create_and_show_ip_data(div, "Propiedades", network_address, mask, false, true);
 
-    document.getElementById("calc_button").focus({ focusVisible: true });
     document.getElementById("user_ip").textContent = ip + "/" + mask;
     document.getElementById("user_mask").textContent = number_to_mask_ip(mask, false) + " = " + mask;
 

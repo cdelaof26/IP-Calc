@@ -1,24 +1,24 @@
-<nav class="fixed flex md:justify-end w-[60%] md:w-[26%] h-full bg-sidebar-0 dark:bg-sidebar-1 transition-transform -translate-x-full md:translate-x-0">
-	<div class="flex flex-col justify-between xl:w-1/2 p-4">
+<nav class="fixed flex md:justify-end w-[60%] md:w-[26%] h-full bg-sidebar-0 dark:bg-sidebar-1 transition-transform -translate-x-full md:translate-x-0 overflow-y-auto">
+	<div class="flex flex-col justify-between h-max min-h-screen xl:w-1/2 p-4">
 		<section>
 			<p class="text-2xl tracking-tight font-bold">
 				Datos de entrada
 			</p>
 			<div>
-				<label for="ip_address" class="ml-4 text-xs uppercase text-dim-2 dark:text-dim-3">
+				<label for="ip_address" class="text-xs uppercase text-dim-2 dark:text-dim-3">
 					Dirección IP
 				</label>
-				<input id="ip_address" class="px-2 w-full transition-[border] duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" type="text" placeholder="192.168.100.1">
+				<input id="ip_address" class="px-2 w-full transition-[border] duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" type="text" placeholder="Ej. 10.0.0.1">
 			</div>
 			<div>
-				<label for="mask" class="ml-4 text-xs uppercase text-dim-2 dark:text-dim-3">
+				<label for="mask" class="text-xs uppercase text-dim-2 dark:text-dim-3">
 					Máscara de red
 				</label>
 				<input id="mask" class="px-2 w-full transition-[border] duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" type="text" placeholder="Entero o IPv4">
 			</div>
 
 			<div class="my-6">
-				<p class="ml-4 text-xs uppercase text-dim-2 dark:text-dim-3">
+				<p class="text-xs uppercase text-dim-2 dark:text-dim-3">
 					Selecciona el campo opcional
 				</p>
 				<div>
@@ -55,9 +55,9 @@
 			</div>
 		</section>
 
-		<div class="w-full flex justify-between">
+		<div class="w-full mt-4 flex justify-between">
 			<p class="font-light tracking-tight">
-				Revisión v0.0.6
+				Revisión v0.0.7
 			</p>
 			<a class="self-center" href="https://github.com/cdelaof26/" target="_blank">
 				<img class="w-6 dark:invert" src="assets/github.svg" alt="GitHub">
