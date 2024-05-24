@@ -6,23 +6,43 @@ Esta aplicación web tiene el objetivo de ser una calculadora IP,
 con la cual dada una IPv4 y una máscara de red, pueda realizar operaciones de
 sub-netting y dar algunos datos acerca de direcciones IP de hosts. 
 
-### Copyright
+### Copyright - [Licencia](LICENSE)
 <pre>
-https://github.com/cdelaof26
+  MIT License
+
+Copyright (c) 2024 cdelaof26
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 </pre>
 
-Por el momento, este software no contiene una licencia, por
-lo que todos los derechos están reservados - cdelaof26. 
+### **El uso sin restricciones de este software (MIT license) se limita a las versiones superiores a v0.0.6.**
+
 
 ### Dependencias
-Esta página web requiere únicamente de HTML5, JS, CSS3 y 
-un navegador web.
+Para la visualización de esta página web se requiere de 
+un navegador con soporte para HTML5, JS y CSS3.
 
 Para el desarrollo se requiere de lo siguiente:
 - Navegador web
 - Tailwind CSS
   - Requiere NodeJS
-  - Opcionalmente: [Tailwind Standalone CLI](https://tailwindcss.com/blog/standalone-cli)
+  - _Preferentemente_: [Tailwind Standalone CLI](https://tailwindcss.com/blog/standalone-cli)
 
 
 ### Historial de cambios
