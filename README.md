@@ -1,6 +1,5 @@
 # IP-Calc
 
-
 ### Descripción
 Esta aplicación web tiene el objetivo de ser una calculadora IP,
 con la cual dada una IPv4 y una máscara de red, pueda realizar operaciones de
@@ -75,12 +74,12 @@ Para el desarrollo se requiere de lo siguiente:
   en binario
 - Agregada sección de subredes [WIP]
 
-#### v0.0.2
+### v0.0.2
 - Agregado botón para el menu en `mobile`.
 - Agregada validación extra para la máscara de red cuando
   es una IP.
 - Agregada validación del campo opcional.
 - La aplicación puede mostrar las propiedades de una dirección de host.
 
-#### v0.0.1
+### v0.0.1
 - Proyecto inicial
