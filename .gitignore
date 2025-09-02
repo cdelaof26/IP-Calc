@@ -3,15 +3,13 @@
 __pycache__
 __pycache__/*
 
-
 # Files
 *.py
 *.key
-
+_pywst_config
 
 # Executables
-tailwind
-
+tailwind*
 
 # OS specific
 *.DS_Store

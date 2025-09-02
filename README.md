@@ -34,17 +34,29 @@ SOFTWARE.
 
 
 ### Dependencias
-Para la visualización de esta página web se requiere de 
-un navegador con soporte para HTML5, JS y CSS3.
+Esta página web requiere únicamente un navegador web con
+soporte para HTML5, JS y CSS3.
 
 Para el desarrollo se requiere de lo siguiente:
 - Navegador web
+- Python >= 3.9
+  - Se hace uso del proyecto [PyWST](https://github.com/cdelaof26/PyWST)
 - Tailwind CSS
   - Requiere NodeJS
-  - _Preferentemente_: [Tailwind Standalone CLI](https://tailwindcss.com/blog/standalone-cli)
+  - Opcionalmente: [Tailwind Standalone CLI](https://tailwindcss.com/blog/standalone-cli)
 
 
 ### Historial de cambios
+
+### v0.0.8
+- Migración a Tailwind CSS 4
+- Migración de `translate.py` a [PyWST](https://github.com/cdelaof26/PyWST)
+- Mejora del diseño en general
+- **TODO**: 
+  - Agregar `Ver en binario` para cualquier subred
+    - Mejorar responsividad
+  - Implementar campo `max_sub_networks` ajustable en UI
+  - Agregar selector de rango para ver subredes
 
 ### v0.0.7
 - Se agregó función para convertir máscaras de red

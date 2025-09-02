@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     set_field_type(0);
 
-    ["ip_address", "mask", "optional_data"].forEach((e) => {
+    ["ip-address-0", "ip-address-1", "ip-address-2", "ip-address-3", "mask", "optional_data"].forEach((e) => {
         document.getElementById(e).addEventListener("keyup", (e) => {
             if (e.key === "Enter")
                 perform_operation();
@@ -12,13 +12,16 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Use 'max_sub_networks = value' to set the maximum amount of sub-networks to be shown");
     console.log("  Keep in mind that setting it too high might be memory consuming!");
 
-    if (get_width() < 700)
-        toggle_navbar_visibility();
-
     // Debug
-    /*document.getElementById("ip_address").value = "10.0.0.1";
+    /*
+    document.getElementById("ip-address-0").value = "10";
+    document.getElementById("ip-address-1").value = "0";
+    document.getElementById("ip-address-2").value = "0";
+    document.getElementById("ip-address-3").value = "1";
     document.getElementById("mask").value = "4";
-    perform_operation();*/
+    document.getElementById("optional_data").value = "16";
+    perform_operation();
+    */
 });
 
 
@@ -63,16 +66,16 @@ function set_field_type(id_type) {
     selected_optional_datatype = id_type;
 
     let properties = [
-        "border", "transition-[border]", "bg-sky-500",
-        "text-[#FFF]", "dark:bg-pink-600", "transition-[background]",
-        "hover:bg-sky-600", "hover:dark:bg-pink-700"
+        "transition-[border]", "bg-indigo-600",
+        "text-white", "dark:bg-pink-600", "transition-[background]",
+        "hover:bg-indigo-800", "hover:dark:bg-pink-700", "dark:border-transparent"
     ];
 
     for (let i = 0; i < 4; i++) {
         let button = document.getElementById("b" + i);
 
         for (let j = 0; j < properties.length; j++)
-            if (j < 2)
+            if (j < 1)
                 button.classList.add(properties[j]);
             else
                 button.classList.remove(properties[j]);
@@ -81,7 +84,7 @@ function set_field_type(id_type) {
     let b = document.getElementById("b" + id_type);
 
     for (let j = 0; j < properties.length; j++)
-        if (j < 2)
+        if (j < 1)
             b.classList.remove(properties[j]);
         else
             b.classList.add(properties[j]);
@@ -94,7 +97,7 @@ function set_field_type(id_type) {
     else if (id_type === OptionalDataType.HOST_BITS)
         label.textContent = "Bits para hosts [Opcional]";
     else if (id_type === OptionalDataType.IP_ADDRESSES_AMOUNT)
-        label.textContent = "Cantidad de direcciones por subred [Opcional]";
+        label.textContent = "Cantidad de hosts [Opcional]";
     else {
         set_data_error_msg("Internal error");
         throw TypeError("Invalid id_type: '" + id_type + "'");
@@ -115,7 +118,7 @@ function create_error_div(error_msg, add_margin) {
 
 function create_div_content(label, value, value_classes, div_classes) {
     let div = document.createElement("div");
-    div.className = "flex justify-between " + div_classes;
+    div.className = "flex justify-between bg-body-0 dark:bg-body-1 " + div_classes;
     let html_label = document.createElement("p");
     let html_value = document.createElement("p");
 
@@ -144,32 +147,10 @@ function scroll_to_top() {
 
 
 function toggle_navbar_visibility() {
-    let navbar = document.getElementById("navbar");
-    let navbar_toggle_button = document.getElementById("navbar_toggle_button");
-    let error_label = document.getElementById("error_label");
+    const navbar = document.getElementById("navbar");
 
-    if (!navbar.classList.contains("-translate-x-full")) {
+    if (!navbar.classList.contains("-translate-x-full"))
         navbar.classList.add("-translate-x-full");
-        navbar_toggle_button.classList.remove("bg-sky-500");
-        navbar_toggle_button.classList.remove("dark:bg-pink-600");
-        navbar_toggle_button.classList.remove("text-[#FFF]");
-        error_label.classList.add("invisible");
-    } else {
+    else
         navbar.classList.remove("-translate-x-full");
-        navbar_toggle_button.classList.add("bg-sky-500");
-        navbar_toggle_button.classList.add("dark:bg-pink-600");
-        navbar_toggle_button.classList.add("text-[#FFF]");
-        error_label.classList.remove("invisible");
-    }
-}
-
-function get_width() {
-    // Function extracted from: https://stackoverflow.com/questions/1038727/how-to-get-browser-width-using-javascript-code
-    return Math.max(
-        document.body.scrollWidth,
-        document.documentElement.scrollWidth,
-        document.body.offsetWidth,
-        document.documentElement.offsetWidth,
-        document.documentElement.clientWidth
-    );
 }

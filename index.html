@@ -2,57 +2,56 @@
 <html lang="es">
 	<head>
 		<meta charset="UTF-8">
-
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-
 		<link rel="stylesheet" type="text/css" href="CSS/tout.css">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 		<title>
 			IP-Calc
 		</title>
 	</head>
-	<body class="bg-body-0 dark:bg-body-1 text-primary-0 dark:text-primary-1">
-		<script id="navbar" src="./components/navbar.js"></script>
+	<body class="flex w-full h-dvh bg-gradient-to-br from-sky-100 via-purple-800 to-sky-700 dark:from-indigo-100 dark:via-purple-900 dark:to-pink-900 text-primary-0 dark:text-primary-1">
+		<button onclick="scroll_to_top()" class="z-10 fixed bottom-4 right-4 md:bottom-8 md:right-8 hover:cursor-pointer">
+			<script src="svg/arrow_up_circle.js" classData="size-12"></script>
+		</button>
 
-		<div class="fixed top-0 right-0 m-2 md:hidden">
-			<button id="navbar_toggle_button" class="p-2 rounded-lg bg-sidebar-0 dark:bg-sidebar-1" onclick={toggle_navbar_visibility()}>
-				<i class="fa fa-navicon fa-lg"></i>
-			</button>
-		</div>
-		<div class="fixed bottom-0 right-0 m-4">
-			<button onclick={scroll_to_top()}>
-				<i class="fa fa-chevron-circle-up fa-2x"></i>
-			</button>
-		</div>
+		<script id="navbar" src="components/navbar.js"></script>
 
-		<main id="main_container" class="flex w-full h-[90dvh] overflow-y-auto">
-			<div class="w-[100%] h-max xl:w-[60%] md:ml-[26%] xl:mr-[15%] p-8 md:p-10">
-				<p class="text-4xl font-bold">
+		<div id="main_container" class="flex-grow space-y-4 overflow-y-auto p-4 md:m-4 md:p-8 lg:m-6 md:rounded-2xl backdrop-blur-3xl bg-body-0/90 dark:bg-body-1/50">
+			<div class="flex justify-between">
+				<h1 class="text-4xl font-bold self-center">
 					IP-Calc
-				</p>
-				<div class="mt-2">
-					<div class="flex justify-between font-mono tracking-tight text-lg md:text-2xl">
-						<p>
-							Dirección:
-						</p>
-						<p id="user_ip"></p>
-					</div>
-					<div class="flex justify-between font-mono tracking-tight md:text-lg">
-						<p>
-							Máscara:
-						</p>
-						<p id="user_mask"></p>
-					</div>
+				</h1>
+				<button onclick="toggle_navbar_visibility()" id="navbar_toggle_button" class="md:hidden self-center p-2 rounded-lg">
+					<script src="svg/bars_3.js" classData="size-8"></script>
+				</button>
+			</div>
+			<div class="overflow-x-auto">
+				<div class="flex justify-between font-mono tracking-tight text-lg md:text-2xl">
+					<h2>
+						Dirección:
+					</h2>
+					<p id="user_ip"></p>
 				</div>
-				<div id="address_information">
-
-				</div>
-				<div id="sub_netting_data">
-
+				<div class="flex justify-between font-mono tracking-tight md:text-lg">
+					<h2>
+						Máscara:
+					</h2>
+					<p id="user_mask"></p>
 				</div>
 			</div>
-		</main>
+			<div id="address_information">
+			</div>
+			<div id="sub_netting_data">
+			</div>
+		</div>
+
+		<div class="w-full p-4 flex justify-end lg:justify-center z-50 fixed bottom-0">
+			<div id="error_label" class="hidden border border-red-500 w-fit p-4 bg-red-100 dark:bg-red-950 rounded-lg">
+				<p id="error_msg" class="border-l-4 border-red-500 pl-4">
+					Error
+				</p>
+			</div>
+		</div>
 
 		<script src="src/data_validation.js" type="application/javascript"></script>
 		<script src="src/data_processing.js" type="application/javascript"></script>

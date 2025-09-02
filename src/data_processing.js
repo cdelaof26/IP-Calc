@@ -50,13 +50,10 @@ function create_and_show_ip_data(container, title, bin_network_ip, mask, as_bina
         let html_hosts = create_div_content("Cantidad de hosts:", value, "text-violet-700 dark:text-pink-400", "");
         container.appendChild(html_hosts);
 
-        if (get_width() < 950)
-            return;
-
         let button = document.createElement("button");
         button.textContent = "Ver en " + (as_binary ? "decimal" : "binario");
-        button.className = "w-40 font-sans hidden md:block m-1 p-1 bg-body-0 dark:bg-body-1 duration-150 border border-dim-0 dark:border-dim-1 rounded-lg "
-            + (as_binary ? "bg-sky-500 dark:bg-pink-600 text-[#FFF] transition-[background] hover:bg-sky-600 dark:hover:bg-pink-700" : "transition-[border] hover:border-sky-500 dark:hover:border-pink-600");
+        button.className = "w-40 font-sans block m-1 p-1 bg-body-0 dark:bg-body-1 duration-150 border border-dim-0 dark:border-dim-1 rounded-lg "
+            + (as_binary ? "bg-indigo-500 dark:bg-pink-600 text-white transition-[background] hover:bg-indigo-600 dark:hover:bg-pink-700" : "transition-[border] hover:border-indigo-500 dark:hover:border-pink-600");
         button.id = "data_toggle";
         button.onclick = () => {
             let div = create_and_replace_div(true);
@@ -75,7 +72,7 @@ function create_and_replace_div(props_div) {
     let div_id = props_div ? "address_information" : "sub_netting_data";
 
     let div = document.createElement("div");
-    div.className = "p-2 md:p-4 bg-sidebar-0 dark:bg-sidebar-1 rounded-lg font-mono " + (props_div ? "mt-2" : "mt-4 hidden");
+    div.className = "overflow-x-auto p-4 md:p-6 bg-body-0 dark:bg-body-1 rounded-lg font-mono " + (props_div ? "mt-2" : "mt-4 hidden");
     div.setAttribute("id", div_id);
 
     document.getElementById(div_id).replaceWith(div);
@@ -208,11 +205,17 @@ function fill_address_sub_netting_div(network_address, mask, optional_data) {
 
 
 function perform_operation() {
-    let ip_field = document.getElementById("ip_address");
-    let mask_field = document.getElementById("mask");
-    let optional_field = document.getElementById("optional_data");
+    const ip_parts = [];
+    for (let i = 0; i < 4; i++)
+        ip_parts.push(document.getElementById(`ip-address-${i}`).value.trim());
 
-    let ip = ip_field.value.trim();
+    const mask_field = document.getElementById("mask");
+    const optional_field = document.getElementById("optional_data");
+
+    let ip = ip_parts.join(".");
+    if (ip === "...")
+        ip = "";
+
     let mask = mask_field.value.trim();
     let optional = optional_field.value.trim();
 

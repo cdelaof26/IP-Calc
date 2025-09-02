@@ -1,68 +1,75 @@
-<nav class="fixed flex md:justify-end w-[60%] md:w-[26%] h-full bg-sidebar-0 dark:bg-sidebar-1 transition-transform -translate-x-full md:translate-x-0 overflow-y-auto">
-	<div class="flex flex-col justify-between h-max min-h-screen xl:w-1/2 p-4">
-		<section>
-			<p class="text-2xl tracking-tight font-bold">
+<nav class="fixed md:static flex flex-col justify-between p-4 w-full md:w-fit h-full z-10 transition-transform duration-300 md:translate-x-0 overflow-y-auto bg-body-0 dark:bg-body-1">
+	<section class="space-y-4">
+		<div class="flex justify-between">
+			<h3 class="text-2xl tracking-tight font-bold self-center">
 				Datos de entrada
-			</p>
-			<div>
-				<label for="ip_address" class="text-xs uppercase text-dim-2 dark:text-dim-3">
-					Dirección IP
-				</label>
-				<input id="ip_address" class="px-2 w-full transition-[border] duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" type="text" placeholder="Ej. 10.0.0.1">
-			</div>
-			<div>
-				<label for="mask" class="text-xs uppercase text-dim-2 dark:text-dim-3">
-					Máscara de red
-				</label>
-				<input id="mask" class="px-2 w-full transition-[border] duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" type="text" placeholder="Entero o IPv4">
-			</div>
-
-			<div class="my-6">
-				<p class="text-xs uppercase text-dim-2 dark:text-dim-3">
-					Selecciona el campo opcional
-				</p>
-				<div>
-					<button id="b0" class="p-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.SUB_NETTING_BITS)}>
-						Bits para subredes
-					</button>
-					<button id="b1" class="p-2 mt-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.SUB_NETWORKS_AMOUNT)}>
-						Cantidad de subredes
-					</button>
-					<button id="b2" class="p-2 mt-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.HOST_BITS)}>
-						Bits para hosts
-					</button>
-					<button id="b3" class="p-2 mt-2 w-full duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" onclick={set_field_type(OptionalDataType.IP_ADDRESSES_AMOUNT)}>
-						Cantidad de direcciones por subred
-					</button>
-				</div>
-			</div>
-
-			<div class="mb-8">
-				<label id="optional_field" for="optional_data" class="text-xs uppercase text-dim-2 dark:text-dim-3">
-					[Opcional]
-				</label>
-				<input id="optional_data" class="px-2 w-full transition-[border] duration-150 border border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 rounded-lg bg-body-0 dark:bg-body-1" type="text" placeholder="0">
-			</div>
-
-			<button id="calc_button" class="w-full h-8 font-bold text-lg bg-body-0 dark:bg-body-1 transition-[border] duration-150 border-2 border-dim-0 dark:border-dim-1 hover:border-sky-500 dark:hover:border-pink-600 rounded-lg" onclick={perform_operation()}>
-				Calcular
+			</h3>
+			<button onclick="toggle_navbar_visibility()" class="md:hidden">
+				<script src="svg/arrow_left_circle.js" classData="size-8 self-center"></script>
 			</button>
-
-			<div id="error_label" class="-top-1 right-12 fixed md:static mt-3 p-2 bg-red-100 dark:bg-red-950 rounded-lg md:visible hidden">
-				<p id="error_msg" class="border-l-4 border-red-500 pl-4">
-					Error
-				</p>
-			</div>
-		</section>
-
-		<div class="w-full mt-4 flex justify-between">
-			<p class="font-light tracking-tight">
-				Revisión v0.0.7
-			</p>
-			<a class="self-center" href="https://github.com/cdelaof26/" target="_blank">
-				<img class="w-6 dark:invert" src="assets/github.svg" alt="GitHub">
-			</a>
 		</div>
+
+		<div class="flex flex-col space-y-2">
+			<label for="ip-address-0" class="text-xs uppercase text-dim-2 dark:text-dim-3">
+				Dirección IP
+			</label>
+			<div class="w-fit self-center p-3 flex justify-center font-mono text-xl rounded-lg bg-sidebar-0 dark:bg-sidebar-1">
+				<input id="ip-address-0" type="text" placeholder="192" class="h-12 w-18 text-center bg-body-0 dark:bg-body-1 border border-gray-300 text-gray-900 dark:text-white rounded-lg hover:border-indigo-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500">
+				<span class="text-2xl self-end">.</span>
+				<input id="ip-address-1" type="text" placeholder="168" class="h-12 w-18 text-center bg-body-0 dark:bg-body-1 border border-gray-300 text-gray-900 dark:text-white rounded-lg hover:border-indigo-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500">
+				<span class="text-2xl self-end">.</span>
+				<input id="ip-address-2" type="text" placeholder="100" class="h-12 w-18 text-center bg-body-0 dark:bg-body-1 border border-gray-300 text-gray-900 dark:text-white rounded-lg hover:border-indigo-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500">
+				<span class="text-2xl self-end">.</span>
+				<input id="ip-address-3" type="text" placeholder="1" class="h-12 w-18 text-center bg-body-0 dark:bg-body-1 border border-gray-300 text-gray-900 dark:text-white rounded-lg hover:border-indigo-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500">
+			</div>
+		</div>
+
+		<div class="flex flex-col space-y-2">
+			<label for="mask" class="text-xs uppercase text-dim-2 dark:text-dim-3">
+				Máscara de red
+			</label>
+			<input id="mask" class="h-12 w-full ps-3 text-xl font-mono transition-[border] duration-150 border border-gray-300 text-gray-900 dark:text-white rounded-lg hover:border-indigo-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 bg-body-0 dark:bg-body-1" type="text" placeholder="Entero o IPv4">
+		</div>
+
+		<div class="flex flex-col space-y-2">
+			<p class="text-xs uppercase text-dim-2 dark:text-dim-3">
+				Selecciona el campo opcional
+			</p>
+			<div class="grid grid-cols-2 gap-2">
+				<button onclick="set_field_type(OptionalDataType.SUB_NETTING_BITS)" id="b0" class="p-2 rounded-lg duration-150 border border-gray-300 hover:border-indigo-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 bg-body-0 dark:bg-body-1">
+					Bits para subredes
+				</button>
+				<button onclick="set_field_type(OptionalDataType.SUB_NETWORKS_AMOUNT)" id="b1" class="p-2 rounded-lg duration-150 border border-gray-300 hover:border-indigo-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 bg-body-0 dark:bg-body-1">
+					Cantidad de subredes
+				</button>
+				<button onclick="set_field_type(OptionalDataType.HOST_BITS)" id="b2" class="p-2 rounded-lg duration-150 border border-gray-300 hover:border-indigo-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 bg-body-0 dark:bg-body-1">
+					Bits para hosts
+				</button>
+				<button onclick="set_field_type(OptionalDataType.IP_ADDRESSES_AMOUNT)" id="b3" class="p-2 rounded-lg duration-150 border border-gray-300 hover:border-indigo-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 bg-body-0 dark:bg-body-1">
+					Cantidad de hosts
+				</button>
+			</div>
+		</div>
+
+		<div class="flex flex-col space-y-2">
+			<label id="optional_field" for="optional_data" class="text-xs uppercase text-dim-2 dark:text-dim-3">
+				[Opcional]
+			</label>
+			<input id="optional_data" class="px-2  transition-[border] duration-150 border border-gray-300 text-gray-900 dark:text-white ps-3 rounded-lg hover:border-indigo-500 dark:hover:border-pink-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-pink-500 bg-body-0 dark:bg-body-1" type="text" placeholder="0">
+		</div>
+
+		<button onclick="perform_operation()" id="calc_button" class="w-full h-12 font-bold text-lg bg-body-0 dark:bg-body-1 transition-[border] duration-150 border border-gray-300 text-gray-900 dark:text-white ps-3 rounded-lg hover:border-indigo-500 dark:hover:border-pink-600 rounded-lg">
+			Calcular
+		</button>
+	</section>
+
+	<div class="flex justify-between mt-4">
+		<p class="font-light tracking-tight">
+			Revisión v0.0.8
+		</p>
+		<a class="self-center" href="https://github.com/cdelaof26/IP-Calc" target="_blank">
+			<script src="svg/github.js" classData="size-6"></script>
+		</a>
 	</div>
 </nav>
 		

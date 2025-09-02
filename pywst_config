@@ -1,0 +1,23 @@
+#     PyWST config file
+# Generated with config.py
+# More information at https://github.com/cdelaof26/PyWST/blob/main/config/sample
+
+[Components]
+PATH = /ruta/absoluta/a/Proyecto2/components
+FILE = navbar.html
+REPL_ID = navbar
+BEHAVIOR = replace
+ONLOAD = True
+WATCH = True
+MINIFY_CODE = True
+
+[SVG]
+PATH = /ruta/absoluta/a/Proyecto2/svg
+FILE = *
+UN_REPL_ID =
+PARAMS = classData
+BEHAVIOR = replace
+ONLOAD = True
+WATCH = True
+MINIFY_CODE = True
+
